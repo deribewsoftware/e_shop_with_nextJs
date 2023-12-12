@@ -1,0 +1,121 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+ 
+}
+
+
+
+model Account {
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String  @db.ObjectId
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.String
+  access_token       String?  @db.String
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.String
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+
+
+model User {
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  hashedPassword String?
+  role Role @default(USER)
+  accounts      Account[]
+  orders        Order[]
+  reviews   Reviews[]
+ 
+}
+
+model Product{
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description String
+    category String
+    brand  String
+    inStock Boolean
+   
+    price Float
+    image Image[]
+    reviews Reviews[]
+  
+
+}
+
+model Reviews{
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  productId String @db.ObjectId
+  rating Int
+  comments String
+  createdDate  DateTime @default(now())
+  products  Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Order{
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String @db.ObjectId
+  amount Float
+  currency String
+  status  String
+  deliveryStatus String?
+  createdAt DateTime   @default(now())
+  paymentIntentId String @unique
+  products CartProductType[]
+  address Address ?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
+}
+
+type CartProductType{
+   name String
+    description String
+    category String
+    brand  String
+    selectedImg Image
+    quantity  Int
+    price Float
+}
+
+type Image{
+  color String
+  colorCode String
+  image String
+
+}
+
+type Address{
+  country String
+  city String
+  line1 String
+  line2 String?
+  postalCode String
+  state String
+}
+enum Role{
+  USER
+  ADMIN
+}
