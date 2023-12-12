@@ -9,7 +9,7 @@ const HomeBanner = () => {
       <div className="w-1/3 relative aspect-video">
         <img
         src="/apple.png"
-        fill
+      
         alt='s'
         />
       </div>

@@ -31,7 +31,7 @@ const Usermenu:React.FC<UserMenuItems> = ({currentUser}) => {
      cursor-pointer
      transition
      " onClick={toggleOpen}>
-      <Avatar src={currentUser?.image} alt="profile"/>
+      <Avatar src={`${currentUser?.image}`} alt="profile"/>
       <AiFillCaretDown/>
 
     </div>
