@@ -42,6 +42,7 @@
     "vercel": "^32.6.1"
   },
   "devDependencies": {
+    "encoding": "^0.1.13",
     "prisma": "^5.5.2"
   }
 }
